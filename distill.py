@@ -30,7 +30,6 @@ from utils.make_plots import plot_history
 
 
 def log(model_name, init_channels, batch_size, num_epochs, img_gen_args, mask_gen_args):
-    os.system("cp unet_compressed.py models/{}".format(model_name.split(".")[0]+".py"))
     args_file = open("./models/{}".format(model_name.split(".")[0]+".args"), "x")
     args_file.write("{}\ninit_chanels: {}\nbatch_size: {}\nepochs: {}\n".format(model_name, init_channels, batch_size, num_epochs))
     for (key, value) in img_gen_args.items():
