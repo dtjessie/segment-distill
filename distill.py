@@ -189,8 +189,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--init_channels", type=int, default=4)
     parser.add_argument("--num_epochs", type=int, default=200)
-    parser.add_argument("--img_dir", type=str, default='./warehouse_data/images/Jonathan/Schneider/sch_2018-04-26-21-59-02/')
-    parser.add_argument("--teacher", type=str, default='models/unet_2019-06-21_14:26:22.h5')
+    parser.add_argument("--img_dir", type=str, required=True)
+    parser.add_argument("--teacher", type=str, required=True)
     args = parser.parse_args()
 
     main(args.init_channels, args.num_epochs, args.img_dir, args.teacher)
