@@ -11,6 +11,7 @@ These scripts expect a certain directory structure and rely on the files in ./ut
 The directory setup needs to be defined in ./utils/config.py in the variables TRAIN_IMG_DIR, TRAIN_LABEL_DIR, VALID_IMG_DIR, VALID_LABEL_DIR.
 
 The files expect a directory setup as
+```
         BASE_DIR
             |
              ->TRAIN_IMG_DIR
@@ -28,6 +29,7 @@ The files expect a directory setup as
              ->VALID_LABEL_DIR
                     |
                      ->0
+```
 so that the 0/ directories contain the actual image and label files.
 
 # How to Train
