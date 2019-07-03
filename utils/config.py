@@ -10,7 +10,7 @@ IMAGE_CHANNELS = 1
 IMAGE_SHAPE = (IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS)
 RESIZE_SHAPE = (IMAGE_HEIGHT, IMAGE_WIDTH)
 
-BASE_DIR = "/path/to/./"
+BASE_DIR = "/path/to/current/dir/"
 TRAIN_IMAGE_DIR = BASE_DIR + "labelled_data/train/image/"
 TRAIN_LABEL_DIR = BASE_DIR + "labelled_data/train/label/"
 VALID_IMAGE_DIR = BASE_DIR + "labelled_data/valid/image/"
