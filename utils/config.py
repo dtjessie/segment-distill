@@ -16,6 +16,9 @@ TRAIN_LABEL_DIR = BASE_DIR + "labelled_data/train/label/"
 VALID_IMAGE_DIR = BASE_DIR + "labelled_data/valid/image/"
 VALID_LABEL_DIR = BASE_DIR + "labelled_data/valid/label/"
 
+LOG_DIR = BASE_DIR + "logs/"
+MODEL_DIR = BASE_DIR + "models/"
+
 LEARNING_RATE = .0001
 
 SEED = 98

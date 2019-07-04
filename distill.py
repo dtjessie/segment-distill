@@ -39,21 +39,21 @@ def log(model_name, init_channels, batch_size, num_epochs, img_gen_args, mask_ge
     args_file.close()
 
 
-def make_labels(img_dir, teacher_model_file):
+def make_labels(base_img_dir, teacher_model_file):
     """ Use the teacher model to create labels from img_dir.
         These labels will be used to train the student model below.
         If the directory exists, it will skip making labels.  """
     teacher = load_model(teacher_model_file, custom_objects={"jaccard_coef": jaccard_coef})
 
-    train_img_dir = os.path.join(img_dir, 'image')
-    save_path = os.path.join(img_dir, 'label_teacher/0')
+    train_img_dir = os.path.join(base_img_dir, 'image')
+    save_path = os.path.join(base_img_dir, 'label_teacher/0')
     if os.path.isdir(save_path):
         print("\n\nDirectory {} already exists".format(save_path))
         print("\nNot making labels ..\n\n")
         return 0
 
-    os.mkdir(os.path.join(img_dir, 'label_teacher'))
-    os.mkdir(os.path.join(img_dir, 'label_teacher/0'))
+    os.mkdir(os.path.join(base_img_dir, 'label_teacher'))
+    os.mkdir(os.path.join(base_img_dir, 'label_teacher/0'))
 
     predict_generator = predict_gen(img_dir=train_img_dir, label_dir=None)
     num_predictions = len(os.listdir(os.path.join(train_img_dir, '0/')))
@@ -89,12 +89,12 @@ def make_labels(img_dir, teacher_model_file):
     clear_session()
 
 
-def setup_dirs(img_dir):
+def setup_dirs(img_dir, train_prop):
     """ Need to place training and validation data into separate directories so
         create a ./tmp_distill/ directory and make links to img_dir """
     try:
         os.mkdir('tmp_distill')
-        
+
         os.mkdir('tmp_distill/train')
         os.mkdir('tmp_distill/train/image/')
         os.mkdir('tmp_distill/train/image/0')
@@ -112,7 +112,7 @@ def setup_dirs(img_dir):
         return 0
     img_list = os.listdir(os.path.join(img_dir + 'image/0'))
     img_list.sort()
-    total_train = int(.9*len(img_list))
+    total_train = int(train_prop * len(img_list))
 
     for train_img in img_list[:total_train]:
         os.system("ln -s {}/{} ./tmp_distill/train/image/0/".format(os.path.join(BASE_DIR + img_dir + 'image/0'), train_img))
@@ -122,13 +122,13 @@ def setup_dirs(img_dir):
         os.system("ln -s {}/{} ./tmp_distill/valid/label/0/".format(os.path.join(BASE_DIR + img_dir + 'label_teacher/0'), valid_img))
 
 
-def main(init_channels, num_epochs, img_dir, teacher):
+def main(teacher, img_dir, init_channels, num_epochs, train_prop):
     """
     Inputs:
+        teacher         model file to generate labels for img_dir
+        img_dir         base directory for images used in training
         init_channels   gives size of the student model
         num_epcohs      how many epochs to train student
-        img_dir         base directory for images used in training
-        teacher         model file to generate labels for img_dir
 
     The output is a student model file located in ./models/
     """
@@ -139,7 +139,7 @@ def main(init_channels, num_epochs, img_dir, teacher):
 
     # Set up labels and build our model which is defined in model.py
     make_labels(img_dir, teacher)
-    setup_dirs(img_dir)
+    setup_dirs(img_dir, train_prop)
     student = unet(init_channels)
     student.summary()
 
@@ -187,10 +187,11 @@ def main(init_channels, num_epochs, img_dir, teacher):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--teacher", type=str, required=True)
+    parser.add_argument("--base_img_dir", type=str, required=True)
     parser.add_argument("--init_channels", type=int, default=4)
     parser.add_argument("--num_epochs", type=int, default=200)
-    parser.add_argument("--img_dir", type=str, required=True)
-    parser.add_argument("--teacher", type=str, required=True)
+    parser.add_argument("--train_prop", type=float, default=.9)
     args = parser.parse_args()
 
-    main(args.init_channels, args.num_epochs, args.img_dir, args.teacher)
+    main(args.teacher, args.base_img_dir, args.init_channels, args.num_epochs, args.train_prop)
