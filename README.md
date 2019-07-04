@@ -31,7 +31,16 @@ so that the 0/ directories contain the actual image and label files. Once the la
 # How to Train
 
 To train a model on already labelled data we run the train.py script. The model and information on training variables will be saved in ./models by default and are created by the log() function inside train.py. Training history and a plot of loss and the Jaccard coefficient will be stored in ./logs and are created by a Keras callback and utils/make_plots.py, respectively. The locations of the ./log and ./models adirectories are defined in utils/config.py. The locations of the ./log and ./models adirectories are defined in utils/config.py..
-
+```
+usage: train.py [-h] [--init_channels INIT_CHANNELS]
+                [--batch_size BATCH_SIZE]
+                [--num_epochs NUM_EPOCHS]
+optional arguments:
+  -h, --help            show this help message and exit
+  --init_channels INIT_CHANNELS
+  --batch_size BATCH_SIZE
+  --num_epochs NUM_EPOCHS
+```
 The default input size for the model is defined in ./utils/config.py
 
 The images are sent to the U-Net model by ./utils/data_generator.py and this file also controls the data augmentation. For more or less augmentation, the train_gen() function can be modified by uncommenting the desired type of augmentation. Note that the augmentation arguments for the image and label are defined separately in case we want try adjusting brightness of the images.
